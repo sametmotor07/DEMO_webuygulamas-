@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Beyza Haç Pazarı</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#c9a84c;--gold-light:#f0d080;--dark:#0d0d0d;--dark2:#1a1a1a;
+  --green:#166534;--green-bg:#dcfce7;--green-border:#86efac;
+  --red:#991b1b;--red-bg:#fee2e2;--red-border:#fca5a5;
+  --yellow:#854d0e;--yellow-bg:#fef9c3;--yellow-border:#fde047;
+  --bg:#f5f0e8;--white:#ffffff;--border:#e8e2d6;--muted:#6b7280;
+  --radius:14px;--radius-sm:10px;
+}
+html,body{width:100%;overflow-x:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;-webkit-appearance:none;appearance:none;outline:none;border:none;background:none;font-family:inherit}
+
+/* ─── NAV ─── */
+.top-nav{background:var(--dark);border-bottom:2px solid var(--gold);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{color:var(--gold);font-size:17px;font-weight:700}
+.nav-user{color:rgba(240,208,128,.7);font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.nav-logout{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold-light);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700}
+
+.tab-bar{display:flex;background:var(--dark);border-bottom:1.5px solid var(--gold);position:sticky;top:0;z-index:100}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 0;background:none;border:none;color:rgba(240,208,128,.4);font-size:11px;font-weight:600;cursor:pointer;user-select:none;transition:color .2s;min-height:56px}
+.tab-btn.active{color:var(--gold-light)}
+.tab-icon{font-size:22px;line-height:1}
+
+/* ─── PAGES ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ─── AUTH ─── */
+.auth-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.auth-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:400px}
+.auth-logo{text-align:center;margin-bottom:20px}
+.auth-logo-icon{width:64px;height:64px;border-radius:50%;background:rgba(201,168,76,.12);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold-light);margin:0 auto 10px}
+.auth-logo h2{font-size:1.2rem;font-weight:700;color:#1a1a1a}
+.auth-logo p{font-size:12px;color:var(--muted);margin-top:3px}
+.auth-tabs{display:flex;background:#f3f4f6;border-radius:10px;padding:3px;margin-bottom:20px;gap:3px}
+.auth-tab{flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s;text-align:center}
+.auth-tab.active{background:var(--white);color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:#4b5563;margin-bottom:5px}
+.form-group input{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:#1a1a1a;background:var(--white);transition:border-color .2s}
+.form-group input:focus{outline:none;border-color:var(--gold)}
+.form-group input::placeholder{color:#d1d5db}
+.auth-btn{width:100%;background:linear-gradient(135deg,#c9a84c,#f0d080);color:#1a1a1a;font-weight:700;font-size:15px;padding:13px;border-radius:12px;margin-top:4px;transition:opacity .2s}
+.auth-btn:active{opacity:.85}
+.auth-error{background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:10px 13px;font-size:13px;color:#991b1b;margin-bottom:12px;display:none}
+.auth-success{background:#dcfce7;border:1px solid #86efac;border-radius:9px;padding:10px 13px;font-size:13px;color:#166534;margin-bottom:12px;display:none}
+
+/* ─── HERO ─── */
+.hero{background:linear-gradient(135deg,#0d0d0d 0%,#1a1209 50%,#0d1a0d 100%);color:white;padding:36px 20px 32px;text-align:center}
+.hero-arabic{width:64px;height:64px;border-radius:50%;background:rgba(201,168,76,.15);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--gold-light);margin:0 auto 16px}
+.hero h1{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.hero h3{color:var(--gold-light);font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.hero p{color:rgba(255,255,255,.65);font-size:.88rem;line-height:1.5}
+.gold-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:14px auto}
+.container{max-width:600px;margin:0 auto;padding:20px 14px 24px}
+.cards-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.feature-card{flex:1 1 calc(50% - 5px);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;cursor:pointer;user-select:none}
+.icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px}
+.card-title{font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.3}
+.card-sub{font-size:10px;color:#9ca3af;margin-top:3px}
+.section-label{font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.address-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.address-inner{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.address-icon{font-size:22px;flex-shrink:0}
+.address-name{font-size:14px;font-weight:600}
+.address-text{font-size:12px;color:#4b5563;margin-top:3px;line-height:1.4}
+.address-note{font-size:11px;color:#9ca3af;margin-top:2px}
+.address-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid #f3f4f6}
+.badge-aktif{font-size:11px;padding:4px 12px;border-radius:20px;background:#ede9fe;color:#4f46e5;font-weight:600;white-space:nowrap}
+.map-btn{display:inline-block;font-size:12px;font-weight:600;color:var(--gold);background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:6px 14px;cursor:pointer;white-space:nowrap}
+
+/* ─── PRODUCTS ─── */
+.table-page-header{background:linear-gradient(135deg,#0d0d0d,#1f1a0e);color:white;padding:20px 16px;border-radius:var(--radius);margin-bottom:16px;border:1px solid rgba(201,168,76,.3)}
+.table-page-header h2{color:var(--gold-light);font-size:1.1rem;margin-bottom:4px}
+.table-page-header p{color:rgba(255,255,255,.55);font-size:12px}
+.table-section-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;margin-bottom:8px}
+.product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.product-item{background:var(--white);border:1px solid #e5e7eb;border-radius:12px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.product-item.dark{background:#1f2937;border-color:#374151}
+.product-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.product-name{font-size:14px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-item.dark .product-name{color:#f9fafb}
+.product-cat{font-size:11px;color:#9ca3af}
+.product-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.product-price{font-size:14px;font-weight:700;color:var(--gold)}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+.stok-var{background:var(--green-bg);color:var(--green)}
+.stok-bitti{background:var(--red-bg);color:var(--red)}
+.stok-az{background:var(--yellow-bg);color:var(--yellow)}
+
+.counter{display:flex;align-items:center;background:#f3f4f6;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb}
+.product-item.dark .counter{background:#374151;border-color:#4b5563}
+.counter-btn{width:34px;height:34px;border:none;background:none;font-size:18px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gold);appearance:none;outline:none;flex-shrink:0;user-select:none}
+.counter-btn:active{background:rgba(201,168,76,.2)}
+.counter-val{min-width:38px;text-align:center;font-size:13px;font-weight:700;color:#1a1a1a}
+.product-item.dark .counter-val{color:#f9fafb}
+
+.al-btn{background:linear-gradient(135deg,#c9a84c,#f0d080);color:#1a1a1a;font-weight:700;font-size:12px;padding:7px 14px;border-radius:9px;transition:opacity .2s;white-space:nowrap}
+.al-btn:active{opacity:.8}
+.al-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ─── ORDERS ─── */
+.orders-header{background:linear-gradient(135deg,#0d0d0d,#1f1a0e);color:white;padding:20px 16px;border-radius:var(--radius);margin-bottom:16px;border:1px solid rgba(201,168,76,.3)}
+.orders-header h2{color:var(--gold-light);font-size:1.1rem;margin-bottom:4px}
+.orders-header p{color:rgba(255,255,255,.55);font-size:12px}
+.order-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.order-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.order-user-name{font-size:14px;font-weight:700;color:#1a1a1a}
+.order-user-email{font-size:11px;color:var(--muted);margin-top:2px}
+.order-date{font-size:11px;color:var(--muted);text-align:right}
+.order-address{font-size:12px;color:#4b5563;background:#f9fafb;border-radius:8px;padding:8px 10px;margin-bottom:8px;display:flex;align-items:flex-start;gap:6px}
+.order-address-icon{flex-shrink:0}
+.order-items{display:flex;flex-direction:column;gap:5px}
+.order-item-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid #f3f4f6}
+.order-item-row:last-child{border-bottom:none}
+.order-item-name{color:#1a1a1a;font-weight:500}
+.order-item-meta{display:flex;align-items:center;gap:8px}
+.order-item-qty{background:#ede9fe;color:#4f46e5;border-radius:8px;padding:2px 9px;font-size:12px;font-weight:700}
+.order-item-price{color:var(--gold);font-weight:700;font-size:13px}
+.order-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:2px solid #f3f4f6}
+.order-total-label{font-size:13px;color:var(--muted);font-weight:600}
+.order-total-val{font-size:16px;font-weight:700;color:var(--gold)}
+.no-orders{text-align:center;padding:40px 20px;color:var(--muted)}
+.no-orders-icon{font-size:40px;margin-bottom:12px}
+.no-orders p{font-size:14px}
+
+/* ─── ADMIN LOGIN GATE ─── */
+.admin-gate{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.admin-gate-title{font-size:14px;font-weight:700;margin-bottom:12px;color:#1a1a1a}
+.admin-pass-row{display:flex;gap:8px}
+.admin-pass-row input{flex:1;border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:14px}
+.admin-pass-row input:focus{outline:none;border-color:var(--gold)}
+.admin-pass-btn{background:linear-gradient(135deg,#c9a84c,#f0d080);color:#1a1a1a;font-weight:700;padding:9px 16px;border-radius:9px;font-size:13px}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;white-space:nowrap;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+.bottom-space{height:40px}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-brand">🕋 Beyza Hac Pazarı</span>
+  <div class="nav-user" id="navUser" style="display:none">
+    <span id="navName"></span>
+    <button class="nav-logout" onclick="logout()">Çıkış</button>
+  </div>
+</nav>
+
+<nav class="tab-bar" id="tabBar" style="display:none">
+  <button class="tab-btn active" id="tab-home" onclick="showPage('home')">
+    <span class="tab-icon">🏠</span>Ana Sayfa
+  </button>
+  <button class="tab-btn" id="tab-products" onclick="showPage('products')">
+    <span class="tab-icon">🕋</span>Ürünler
+  </button>
+  
+  <button class="tab-btn" id="tab-orders" onclick="showPage('orders')">
+    <span class="tab-icon">📋</span>Siparişler
+  </button>
+</nav>
+
+<!-- ─── AUTH ─── -->
+<div id="page-auth" class="page active">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">الله</div>
+        <h2>Beyza Hac Pazarı</h2>
+        <p>Hac, Umre ve Namazlık eşyaların adresi</p>
+      </div>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="authTabGiris" onclick="switchAuthTab('giris')">Giriş Yap</div>
+        <div class="auth-tab" id="authTabKayit" onclick="switchAuthTab('kayit')">Kayıt Ol</div>
+      </div>
+      <div id="authError" class="auth-error"></div>
+      <div id="authSuccess" class="auth-success"></div>
+
+      <!-- GİRİŞ FORMU -->
+      <div id="formGiris">
+        <div class="form-group">
+          <label>Gmail Adresi</label>
+          <input type="email" id="loginEmail" placeholder="ornek@gmail.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Şifre</label>
+          <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
+      </div>
+
+      <!-- KAYIT FORMU -->
+      <div id="formKayit" style="display:none">
+        <div class="form-group">
+          <label>Ad Soyad</label>
+          <input type="text" id="regName" placeholder="Adınız Soyadınız">
+        </div>
+        <div class="form-group">
+          <label>Gmail Adresi</label>
+          <input type="email" id="regEmail" placeholder="ornek@gmail.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Şifre</label>
+          <input type="password" id="regPass" placeholder="En az 6 karakter" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label>Adres</label>
+          <input type="text" id="regAddress" placeholder="Mahalle, sokak, no, şehir">
+        </div>
+        <button class="auth-btn" onclick="registerUser()">Kayıt Ol</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── ANA SAYFA ─── -->
+<div id="page-home" class="page">
+  <div class="hero">
+    <div class="hero-arabic">الله</div>
+    <h1>Sayfamıza Hoş Geldiniz</h1>
+    <h3>Beyza Hac Pazarı</h3>
+    <div class="gold-divider"></div>
+    <p>Hac, Umre ve Namazlık bütün eşyaların adresi.</p>
+  </div>
+  <div class="container">
+    <div class="cards-grid">
+      <div class="feature-card" onclick="showPage('products')">
+        <div class="icon-box" style="background:#fef3c7">🕋</div>
+        <div class="card-title">Hac &amp; Umre Malzemeleri</div>
+        <div class="card-sub">Beyza Hac Pazarı</div>
+      </div>
+      <div class="feature-card" onclick="showPage('products')">
+        <div class="icon-box" style="background:#d1fae5">🧕</div>
+        <div class="card-title">Şal &amp; Giyim Malzemeleri</div>
+        <div class="card-sub">Beyza Hac Pazarı</div>
+      </div>
+      <div class="feature-card" onclick="showPage('products')">
+        <div class="icon-box" style="background:#d1fae5">🕌</div>
+        <div class="card-title">Namaz Malzemeleri</div>
+        <div class="card-sub">Beyza Hac Pazarı</div>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box" style="background:#ede9fe">✅</div>
+        <div class="card-title">Kalite Güvencesi</div>
+        <div class="card-sub">%100 Müşteri Memnuniyeti</div>
+      </div>
+    </div>
+    <div class="section-label">Adres</div>
+    <div class="address-box">
+      <div class="address-inner">
+        <span class="address-icon">🕋</span>
+        <div>
+          <div class="address-name">Suzan Beyza İşleyen</div>
+          <div class="address-text">Kızılsaray, 61. Sk. No:3, 07040 Muratpaşa/Antalya</div>
+          <div class="address-note">Muratpaşa Camisi karşısı</div>
+        </div>
+      </div>
+      <div class="address-footer">
+        <span class="badge-aktif">Aktif</span>
+        <a href="https://maps.apple.com/?q=Muratpaşa+Camisi+Antalya" target="_blank">
+          <span class="map-btn">📍 Harita</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ─── ÜRÜNLER ─── -->
+<div id="page-products" class="page">
+  <div class="container">
+    <div class="table-page-header">
+      <h2>🕋 Hac &amp; Umre Malzemeleri</h2>
+      <p>Ürün listesi — stok ve fiyat bilgileri</p>
+    </div>
+
+    <div class="table-section-title">İhram &amp; Temel Malzemeler</div>
+    <div class="product-list">
+
+      <div class="product-item" data-id="ihram1" data-name="İhram" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">İhram</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item" data-id="ihram2" data-name="İhram 2" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">İhram 2</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item" data-id="ihram3" data-name="İhram 3" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">İhram 3</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item" data-id="tesbih" data-name="Tesbih" data-price="50">
+        <div class="product-left">
+          <div class="product-name">Tesbih</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">50 ₺</div>
+          <span class="badge stok-bitti">tükendi</span>
+        </div>
+      </div>
+
+      <div class="product-item" data-id="ihram4" data-name="İhram 4" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">İhram 4</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="table-section-title">Dua Kitabı, Kur'an &amp; Diğer</div>
+    <div class="product-list">
+
+      <div class="product-item dark" data-id="dua1" data-name="Dua Kitabı / Cep Kur'an'ı" data-price="400">
+        <div class="product-left">
+          <div class="product-name">Dua Kitabı / Cep Kur'an'ı</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">400 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item dark" data-id="dua2" data-name="Dua Kitabı / Cep Kur'an'ı 2" data-price="400">
+        <div class="product-left">
+          <div class="product-name">Dua Kitabı / Cep Kur'an'ı 2</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">400 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item dark" data-id="dua3" data-name="Dua Kitabı / Cep Kur'an'ı 3" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">Dua Kitabı / Cep Kur'an'ı 3</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <div class="counter">
+            <button class="counter-btn" onclick="say(this,-1)">−</button>
+            <span class="counter-val">0</span>
+            <button class="counter-btn" onclick="say(this,1)">+</button>
+          </div>
+          <span class="badge stok-var">bulunuyor</span>
+          <button class="al-btn" onclick="alTusu(this)" disabled>Al</button>
+        </div>
+      </div>
+
+      <div class="product-item dark" data-id="koku" data-name="Koku" data-price="1000">
+        <div class="product-left">
+          <div class="product-name">Koku</div>
+          <div class="product-cat">Hac / Umre</div>
+        </div>
+        <div class="product-right">
+          <div class="product-price">1.000 ₺</div>
+          <span class="badge stok-bitti">tükendi</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ─── SİPARİŞLER ─── -->
+<div id="page-orders" class="page">
+  <div class="container">
+    <div class="orders-header">
+      <h2>📋 Siparişler</h2>
+      <p>Tüm müşteri siparişleri</p>
+    </div>
+    <div id="adminGate">
+      <div class="admin-gate">
+        <div class="admin-gate-title">🔒 Yönetici Girişi Gerekli</div>
+        <div class="admin-pass-row">
+          <input type="password" id="adminPassInput" placeholder="Yönetici şifresi" onkeydown="if(event.key==='Enter')checkAdmin()">
+          <button class="admin-pass-btn" onclick="checkAdmin()">Gir</button>
+        </div>
+        <div id="adminError" style="font-size:12px;color:#991b1b;margin-top:8px;display:none">Yanlış şifre!</div>
+      </div>
+    </div>
+    <div id="ordersList" style="display:none"></div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STORAGE ──
+const DB_KEY = 'bhp_users';
+const ORDERS_KEY = 'bhp_orders';
+const SESSION_KEY = 'bhp_session';
+const ADMIN_PASS = 'beyza0410';
+
+function getUsers(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'[]')}catch{return[]}}
+function saveUsers(u){localStorage.setItem(DB_KEY,JSON.stringify(u))}
+function getOrders(){try{return JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]')}catch{return[]}}
+function saveOrders(o){localStorage.setItem(ORDERS_KEY,JSON.stringify(o))}
+function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
+function saveSession(s){localStorage.setItem(SESSION_KEY,JSON.stringify(s))}
+function clearSession(){localStorage.removeItem(SESSION_KEY)}
+
+// ── AUTH ──
+function switchAuthTab(tab){
+  document.getElementById('authTabGiris').classList.toggle('active',tab==='giris');
+  document.getElementById('authTabKayit').classList.toggle('active',tab==='kayit');
+  document.getElementById('formGiris').style.display=tab==='giris'?'block':'none';
+  document.getElementById('formKayit').style.display=tab==='kayit'?'block':'none';
+  hideAuthMsg();
+}
+
+function showAuthError(msg){
+  const el=document.getElementById('authError');
+  el.textContent=msg;el.style.display='block';
+  document.getElementById('authSuccess').style.display='none';
+}
+function showAuthSuccess(msg){
+  const el=document.getElementById('authSuccess');
+  el.textContent=msg;el.style.display='block';
+  document.getElementById('authError').style.display='none';
+}
+function hideAuthMsg(){
+  document.getElementById('authError').style.display='none';
+  document.getElementById('authSuccess').style.display='none';
+}
+
+function registerUser(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('regPass').value;
+  const address=document.getElementById('regAddress').value.trim();
+  if(!name){return showAuthError('Ad soyad giriniz.')}
+  if(!email||!email.includes('@')){return showAuthError('Geçerli bir Gmail adresi giriniz.')}
+  if(pass.length<6){return showAuthError('Şifre en az 6 karakter olmalıdır.')}
+  if(!address){return showAuthError('Adresinizi giriniz.')}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){return showAuthError('Bu email zaten kayıtlı.')}
+  users.push({name,email,pass,address,createdAt:new Date().toISOString()});
+  saveUsers(users);
+  showAuthSuccess('Kayıt başarılı! Giriş yapabilirsiniz.');
+  setTimeout(()=>switchAuthTab('giris'),1200);
+  document.getElementById('loginEmail').value=email;
+}
+
+function loginUser(){
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  if(!email||!pass){return showAuthError('Email ve şifre giriniz.')}
+  const users=getUsers();
+  const user=users.find(u=>u.email===email&&u.pass===pass);
+  if(!user){return showAuthError('Email veya şifre hatalı.')}
+  saveSession(user);
+  enterApp(user);
+}
+
+function logout(){
+  clearSession();
+  document.getElementById('navUser').style.display='none';
+  document.getElementById('tabBar').style.display='none';
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active')});
+  document.getElementById('page-auth').classList.add('active');
+  document.getElementById('adminGate').style.display='block';
+  document.getElementById('ordersList').style.display='none';
+}
+
+function enterApp(user){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('navUser').style.display='flex';
+  document.getElementById('navName').textContent=user.name.split(' ')[0];
+  document.getElementById('tabBar').style.display='flex';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-home').classList.add('active');
+}
+
+// ── PAGES ──
+function showPage(name){
+  document.querySelectorAll('.page').forEach(s=>{s.classList.remove('active')});
+  const target=document.getElementById('page-'+name);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const tab=document.getElementById('tab-'+name);
+  if(tab) tab.classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='orders') renderOrders();
+}
+
+// ── COUNTER ──
+function say(btn,delta){
+  const counter=btn.parentElement;
+  const valEl=counter.querySelector('.counter-val');
+  const productRight=counter.parentElement;
+  const badge=productRight.querySelector('.badge');
+  const alBtn=productRight.querySelector('.al-btn');
+
+  let val=parseInt(valEl.textContent)+delta;
+  if(val<0) val=0;
+  valEl.textContent=val;
+
+  badge.className='badge';
+  if(val===0){
+    badge.classList.add('stok-var');
+    badge.textContent='bulunuyor';
+    if(alBtn) alBtn.disabled=true;
+  } else if(val<=1){
+    badge.classList.add('stok-az');
+    badge.textContent=val+' adet';
+    if(alBtn) alBtn.disabled=false;
+  } else {
+    badge.classList.add('stok-var');
+    badge.textContent=val+' adet';
+    if(alBtn) alBtn.disabled=false;
+  }
+}
+
+// ── AL TUSU ──
+function alTusu(btn){
+  const user=getSession();
+  if(!user){showToast('Lütfen önce giriş yapın!');return}
+
+  const productItem=btn.closest('.product-item');
+  const valEl=productItem.querySelector('.counter-val');
+  const adet=parseInt(valEl.textContent);
+  if(adet<=0){showToast('Lütfen adet seçin.');return}
+
+  const productName=productItem.dataset.name;
+  const productPrice=parseInt(productItem.dataset.price);
+  const toplam=adet*productPrice;
+
+  const orders=getOrders();
+  orders.push({
+    id:Date.now(),
+    user:{name:user.name,email:user.email,address:user.address},
+    product:{name:productName,price:productPrice},
+    adet,
+    toplam,
+    tarih:new Date().toLocaleString('tr-TR')
+  });
+  saveOrders(orders);
+
+  // sayacı sıfırla
+  valEl.textContent='0';
+  const badge=productItem.querySelector('.badge');
+  badge.className='badge stok-var';
+  badge.textContent='bulunuyor';
+  btn.disabled=true;
+
+  showToast('✅ '+adet+' adet "'+productName+'" siparişi alındı!');
+}
+
+// ── SİPARİŞLERİ RENDER ET ──
+function checkAdmin(){
+  const val=document.getElementById('adminPassInput').value;
+  if(val===ADMIN_PASS){
+    document.getElementById('adminGate').style.display='none';
+    document.getElementById('ordersList').style.display='block';
+    renderOrdersContent();
+  } else {
+    document.getElementById('adminError').style.display='block';
+  }
+}
+
+function renderOrders(){
+  // eğer admin zaten giriş yapmışsa
+  if(document.getElementById('ordersList').style.display==='block'){
+    renderOrdersContent();
+  }
+}
+
+function renderOrdersContent(){
+  const orders=getOrders();
+  const el=document.getElementById('ordersList');
+
+  if(orders.length===0){
+    el.innerHTML='<div class="no-orders"><div class="no-orders-icon">📦</div><p>Henüz sipariş bulunmuyor.</p></div>';
+    return;
+  }
+
+  const sorted=[...orders].reverse();
+
+  el.innerHTML=sorted.map(o=>`
+    <div class="order-card">
+
+      <button onclick="deleteOrder(${o.id})" 
+      style="background:#dc2626;color:white;padding:5px 10px;border-radius:6px;font-size:12px;float:right">
+      ❌ Sil
+      </button>
+
+      <div class="order-card-header">
+        <div>
+          <div class="order-user-name">👤 ${escHtml(o.user.name)}</div>
+          <div class="order-user-email">${escHtml(o.user.email)}</div>
+        </div>
+        <div class="order-date">${escHtml(o.tarih)}</div>
+      </div>
+
+      <div class="order-address">
+        <span class="order-address-icon">📍</span>
+        <span>${escHtml(o.user.address)}</span>
+      </div>
+
+      <div class="order-items">
+        <div class="order-item-row">
+          <span class="order-item-name">${escHtml(o.product.name)}</span>
+          <div class="order-item-meta">
+            <span class="order-item-qty">${o.adet} adet</span>
+            <span class="order-item-price">${o.product.price.toLocaleString('tr-TR')} ₺</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-total">
+        <span class="order-total-label">Toplam</span>
+        <span class="order-total-val">${o.toplam.toLocaleString('tr-TR')} ₺</span>
+      </div>
+
+    </div>
+  `).join('');
+}
+
+/* 🔥 YENİ EKLENEN SİLME FONKSİYONU */
+function deleteOrder(id){
+  let orders = getOrders();
+  orders = orders.filter(o => o.id !== id);
+  saveOrders(orders);
+  renderOrdersContent();
+  showToast("❌ Sipariş silindi");
+}
+
+function escHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── TOAST ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── INIT ──
+(function(){
+  const session=getSession();
+  if(session){
+    enterApp(session);
+  }
+})();
+</script>
+</body>
+</html>
