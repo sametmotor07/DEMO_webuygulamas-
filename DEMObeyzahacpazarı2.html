@@ -162,10 +162,6 @@ button{cursor:pointer;-webkit-appearance:none;appearance:none;outline:none;borde
   <button class="tab-btn active" id="tab-home" onclick="showPage('home')">
     <span class="tab-icon">🏠</span>Ana Sayfa
   </button>
-  <button class="tab-btn" id="tab-products" onclick="showPage('products')">
-    <span class="tab-icon">🕋</span>Ürünler
-  </button>
-  
   <button class="tab-btn" id="tab-orders" onclick="showPage('orders')">
     <span class="tab-icon">📋</span>Siparişler
   </button>
@@ -468,7 +464,7 @@ button{cursor:pointer;-webkit-appearance:none;appearance:none;outline:none;borde
 const DB_KEY = 'bhp_users';
 const ORDERS_KEY = 'bhp_orders';
 const SESSION_KEY = 'bhp_session';
-const ADMIN_PASS = 'beyza0410';
+const ADMIN_PASS = '123450';
 
 function getUsers(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'[]')}catch{return[]}}
 function saveUsers(u){localStorage.setItem(DB_KEY,JSON.stringify(u))}
